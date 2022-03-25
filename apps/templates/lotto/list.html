@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <h1>Lotto List</h1>
+    </div>
+</div>
+
+<div class="row">
+
+    {% for lotto in lottos %}
+        <div class="col-12">
+            Title:  <a href="/lotto/{{lotto.id}}">{{lotto.title}}</a>
+        </div>        
+    {% endfor %}    
+
+</div>
+
+<script type="module">
+    import { ethers } from "/static/ethers-5.2.esm.min.js";
+
+    const lottoAddress = "0xc39E0A6D0D92d11C809E7B6eEdb3D01238b45467";
+    const lottoAbi = [
+        "constructor(address,address,uint256)",
+        "event Bought(address,uint256)",
+        "event OwnershipTransferred(address indexed,address indexed)",
+        "event Prize(address,uint256)",
+        "event Reward(address,uint256)",
+        "function buy(uint256) payable",
+        "function claim(address)",
+        "function dao() view returns (address)",
+        "function end(uint256,uint256,uint256)",
+        "function ended() view returns (bool)",
+        "function firstPrizeNumber() view returns (uint256)",
+        "function numberBought(uint256) view returns (bool)",
+        "function numberBoughtBy(uint256) view returns (address)",
+        "function owner() view returns (address)",
+        "function potAmount() view returns (uint256)",
+        "function registrar() view returns (address)",
+        "function renounceOwnership()",
+        "function secondPrizeNumber() view returns (uint256)",
+        "function thirdPrizeNumber() view returns (uint256)",
+        "function ticketPrice() view returns (uint256)",
+        "function transferOwnership(address)"
+    ]
+
+
+    const provider =  new ethers.providers.JsonRpcProvider('https://rpc.chainbifrost.com');
+    const block = await provider.getBlockNumber();
+    console.log("Block number: ", block)
+
+    const lottoContract = new ethers.Contract(lottoAddress, lottoAbi, provider);
+    const dao = await lottoContract.dao()
+    console.log("DAO: ", dao);
+
+    lottoContract.populateTransaction.buy(1).then((data)=> {
+
+    })
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<input type="hidden" id="lotto_contract_address" name="lotto_contract_address" value="{{ lotto.contract_address }}">
+
+<div class="row">
+    <div class="col-12 col-md-4 offset-md-4">
+        <h1>Title: {{lotto.title}}</h1>    
+        <p>
+            Description: {{lotto.description}} <br/>
+            Contract Address: {{lotto.contract_address}} <br/>
+            <div id="walletBalance"></div>       
+            <div id="ticketPrice"></div>                                        
+        </p>   
+        <div class="mb-3">
+            <label class="form-label">Number</label>
+            <input type="number" class="form-control" id="lottery_number">
+        </div>  
+        <button onclick="buyNumber()" class="btn btn-primary">Buy For 200 BFT</button>        
+    </div>
+</div>
+
+
+{% if session['wallet'] %}
+<div class="row py-3">
+    <div class="col-12 col-md-8 offset-md-2">
+        <table class="table" id="numberBoughtTable" style="table-layout: fixed;">
+            <thead>
+            <tr>
+                <th scope="col" style="width:15%">Number</th>
+                <th scope="col" style="width:20%">Block</th>
+                <th scope="col" style="width:65%">Transaction Hash</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="row py-3">
+    <div class="col-12 col-md-6 offset-md-3">
+        <table class="table" id="rewardsForMeTable" style="table-layout: fixed;">
+            <thead>
+            <tr>
+                <th scope="col" style="width:65%">Buyer</th>
+                <th scope="col" style="width:15%">Reward</th>
+                <th scope="col" style="width:20%">Block</th>               
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="modal fade" id="numberHasBeenBoughtModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Number Has Been Bought</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          The number has been bought. Please choose a different number.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script type="module">
+    import { ethers } from "/static/ethers-5.2.esm.min.js";
+
+    var wallet = document.getElementById("wallet").value;
+    var signer = document.getElementById("signer").value; 
+    
+    const lottoAddress = document.getElementById("lotto_contract_address").value;
+    const lottoAbi = [
+        "constructor(address,address,uint256)",
+        "event Bought(address indexed,uint256)",
+        "event OwnershipTransferred(address indexed,address indexed)",
+        "event Prize(address indexed,uint256)",
+        "event Reward(address indexed,address indexed,uint256)",
+        "function buy(uint256) payable",
+        "function claim(address)",
+        "function dao() view returns (address)",
+        "function end(uint256,uint256,uint256)",
+        "function ended() view returns (bool)",
+        "function firstPrizeNumber() view returns (uint256)",
+        "function numberBought(uint256) view returns (bool)",
+        "function numberBoughtBy(uint256) view returns (address)",
+        "function owner() view returns (address)",
+        "function potAmount() view returns (uint256)",
+        "function registrar() view returns (address)",
+        "function renounceOwnership()",
+        "function secondPrizeNumber() view returns (uint256)",
+        "function thirdPrizeNumber() view returns (uint256)",
+        "function ticketPrice() view returns (uint256)",
+        "function transferOwnership(address)"
+    ]
+
+
+
+    const provider =  new ethers.providers.JsonRpcProvider('https://rpc.chainbifrost.com');
+    const lottoContract = new ethers.Contract(lottoAddress, lottoAbi, provider);
+
+    var walletBalance = await provider.getBalance(wallet);
+    walletBalance = ethers.utils.formatEther(walletBalance);
+    document.getElementById("walletBalance").innerHTML = "Wallet Balance: " + parseFloat(walletBalance).toFixed(2) + " BFT"
+
+    var dao = await lottoContract.dao();
+    var ended = await lottoContract.ended(); 
+    var owner = await lottoContract.owner(); 
+    var registrar = await lottoContract.registrar(); 
+
+    var firstPrizeNumber = await lottoContract.firstPrizeNumber();
+    firstPrizeNumber = ethers.utils.formatUnits(firstPrizeNumber,0);
+    var secondPrizeNumber = await lottoContract.secondPrizeNumber();
+    secondPrizeNumber = ethers.utils.formatUnits(secondPrizeNumber,0);
+    var thirdPrizeNumber = await lottoContract.thirdPrizeNumber();
+    thirdPrizeNumber = ethers.utils.formatUnits(thirdPrizeNumber,0);    
+    var ticketPrice = await lottoContract.ticketPrice();
+    ticketPrice = ethers.utils.formatEther(ticketPrice);
+    var potAmount = await lottoContract.potAmount();
+    potAmount = ethers.utils.formatEther(potAmount);
+    console.log('potAmount: ', potAmount)   
+    document.getElementById("ticketPrice").innerHTML = "Ticket Price: " + parseFloat(ticketPrice).toFixed(2) + " BFT"
+      
+    
+    export function buyNumber() {
+
+        var lottery_number = document.getElementById("lottery_number").value;
+
+        lottoContract.numberBought(lottery_number).then((numberHasBeenBought)=> {
+            console.log("numberBought: ",numberHasBeenBought)
+            if(numberHasBeenBought) {
+                console.log("numberBought");
+                var myModal = new bootstrap.Modal(document.getElementById('numberHasBeenBoughtModal'));
+                myModal.show()                
+            } else {
+                lottoContract.populateTransaction.buy(lottery_number).then((data)=> {
+                    if (signer == 'web') {              
+                        var url = "https://chainbifrost.com/confirm?dapp=lotto777.xyz&to=" + data['to'] + "&data=" + data['data'] + "&value=200";                                
+                        window.open(url);
+                    } else {
+                        var url = "https://hub.pipeline.com.my/app?dapp=lotto777.xyz&action=confirm&to=" + data['to'] + "&data=" + data['data'] + "&value=200";                                
+                        window.open(url);
+                    }   
+                    setTimeout(()=> {
+                        location.reload();
+                    }, 10000)    
+                })  
+            }
+        })
+
+    }
+    window.buyNumber = buyNumber;
+
+    export function claimLeftover() {
+        lottoContract.populateTransaction.claim(owner).then((data)=> {
+            var url = "https://chainbifrost.com/confirm?dapp=lotto777.xyz&to=" + data['to'] + "&data=" + data['data']                              
+            window.open(url);     
+        })  
+    }
+    window.claimLeftover = claimLeftover;
+
+    export function end(number1, number2, number3) {
+        lottoContract.populateTransaction.end(number1, number2, number3).then((data)=> {
+            var url = "https://chainbifrost.com/confirm?dapp=lotto777.xyz&to=" + data['to'] + "&data=" + data['data']                              
+            window.open(url);     
+        })          
+    }
+    window.end = end;
+
+    var numberBoughtByMeList = []
+    var rewardsForMeList = []
+
+    if (wallet) {
+
+        var filterNumberBoughtByMe = lottoContract.filters.Bought(wallet, null);
+        var numberBoughtByMe = await lottoContract.queryFilter(filterNumberBoughtByMe);
+
+        var numberBoughtTable = document.getElementById("numberBoughtTable");       
+        
+        for (let i = 0; i < numberBoughtByMe.length; i++) {
+            var blockNumber = numberBoughtByMe[i]['blockNumber']
+            var transactionHash = numberBoughtByMe[i]['transactionHash']
+            var buyer = numberBoughtByMe[i]['args'][0];
+            var number = ethers.utils.formatUnits(numberBoughtByMe[i]['args'][1], 0);
+            numberBoughtByMeList.push(number);
+            var row = numberBoughtTable.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            cell1.innerHTML = number;
+            cell2.innerHTML = blockNumber;             
+            cell3.innerHTML = "<a href='https://scan.chainbifrost.com/tx/"+ transactionHash + "'>" + transactionHash + "</a>";    
+            cell3.style['word-wrap'] = "break-word";         
+            console.log("Buyer ", buyer, " Bought ", number);
+        }
+
+        var filterRewardsForMe = lottoContract.filters.Reward(null, wallet, null);
+        var rewardsForMe = await lottoContract.queryFilter(filterRewardsForMe);
+
+        var rewardsForMeTable = document.getElementById("rewardsForMeTable");       
+        
+        for (let i = 0; i < rewardsForMe.length; i++) {
+            var blockNumber = rewardsForMe[i]['blockNumber']
+            var transactionHash = rewardsForMe[i]['transactionHash']            
+            var buyer = rewardsForMe[i]['args'][0];
+            var receiver = rewardsForMe[i]['args'][1];
+            var amount = ethers.utils.formatEther(rewardsForMe[i]['args'][2]);
+            var data = [buyer, receiver, amount]
+            rewardsForMeList.push(data);
+            var row = rewardsForMeTable.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            cell1.innerHTML = buyer;             
+            cell1.style['word-wrap'] = "break-word";
+            cell2.innerHTML = amount + " BFT";      
+            cell3.innerHTML = blockNumber;      
+            console.log("Buyer ", buyer, " Rewards ", amount);
+        }        
+
+    }
+
+
+
+    // lottoContract.on("Bought", (event) => {
+    //     console.log('event: ', event);
+    //     var buyer = event['args'][0];
+    //     var number = ethers.utils.formatUnits(event['args'][1], 0)
+    //     console.log("Buyer ",buyer, " bought ", number);
+    // });    
+
+
+</script>
+
+
+{% endblock %}
+

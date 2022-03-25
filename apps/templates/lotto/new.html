@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <h1>New Lotto</h1>
+    </div>
+</div>
+
+<div class="row">
+
+
+    <form action="/lotto/admin/" method="POST">
+        <div class="mb-3">
+          <label class="form-label">title</label>
+          <input type="text" class="form-control" name="title" value="{{title}}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">description</label>
+          <input type="text" class="form-control" name="description" value="{{description}}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">contract_address</label>
+          <input type="text" class="form-control" name="contract_address" value="{{contract_address}}">
+        </div>    
+        <div class="mb-3">
+            <label class="form-label">lottery_type</label>
+            <input type="text" class="form-control" name="lottery_type" value="{{lottery_type}}">
+          </div>        
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form> 
+
+    {% for lotto in lottos %}
+        <div class="col-12">
+            Title:  <a href="/lotto/admin/{{lotto.id}}">{{lotto.title}}</a>
+        </div>        
+    {% endfor %}    
+
+</div>
+
+{% endblock %}
