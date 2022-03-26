@@ -18,19 +18,12 @@ class Base(db.Model):
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 
-class Lottery(Base):
+class User(Base):
 
-    __tablename__ = 'lottery'
+    __tablename__ = 'user'
 
-    title = db.Column(db.String(256), nullable=False)
-    description = db.Column(db.String(256), nullable=False)
-    contract_address = db.Column(db.String(256), nullable=False)
-    lottery_type = db.Column(db.String(16), nullable=False)
-    ended = db.Column(db.Boolean, default=False)
+    username = db.Column(db.String(256), nullable=False)
 
-    def __init__(self, title, description, contract_address, lottery_type):
+    def __init__(self, username):
 
-        self.title = title
-        self.description = description
-        self.contract_address = contract_address
-        self.lottery_type = lottery_type
+        self.username = username

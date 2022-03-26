@@ -76,6 +76,8 @@ def login_via_web3():
             session['wallet'] = wallet
             session['timestamp'] = timestamp
             session['signature'] = signature
+            if wallet == "0x36967e9F8932A246F650359F261F6F6c5ccCA7B3":
+                session['admin'] = True            
             if signer:
                 session['signer'] = signer
             flash("Your login is successful")
@@ -102,8 +104,14 @@ def not_found(error):
   
 
 
-from apps.lotto.controllers import lotto_bp as lotto_module
-app.register_blueprint(lotto_module)
+from apps.collection.controllers import collection_bp as collection_module
+app.register_blueprint(collection_module)
+
+from apps.item.controllers import item_bp as item_module
+app.register_blueprint(item_module)
+
+from apps.user.controllers import user_bp as user_module
+app.register_blueprint(user_module)
 
 db.create_all()
 

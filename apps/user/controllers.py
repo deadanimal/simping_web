@@ -8,70 +8,24 @@ import sqlalchemy
 import time
 from decouple import config
 
-from apps.lotto.models import Lottery
+from apps.user.models import User
 from apps import db
 
-lotto_bp = Blueprint('lotto', __name__, url_prefix='/lotto')
+user_bp = Blueprint('user', __name__, url_prefix='/user')
 
 
-@lotto_bp.route('/', methods=['GET'])
-def lotto_list():
-    lotteries = db.session.query(Lottery).order_by(Lottery.date_created.desc())
-    return render_template('lotto/list.html', lottos=lotteries)
+@user_bp.route('/', methods=['GET'])
+def user_list():
+    user = db.session.query(User).order_by(User.date_created.desc())
+    return render_template('user/list.html', users=luser)
 
 
 
-@lotto_bp.route('/<int:lotto_id>', methods=['GET'])
-def lotto_detail(lotto_id):
-    lottery = db.session.query(Lottery).filter_by(id=lotto_id).first()
-    if lottery:
-        return render_template('lotto/detail.html', lotto=lottery)    
+@user_bp.route('/<int:user_id>', methods=['GET'])
+def user_detail(user_id):
+    user = db.session.query(u).filter_by(id=user_id).first()
+    if user:
+        return render_template('user/detail.html', user=user)    
     else:
         return render_template('404.html')   
 
-
-
-@lotto_bp.route('/result', methods=['GET'])
-def lotto_result_list():
-    lotteries = db.session.query(Lottery).filter_by(ended=True).order_by(Lottery.date_created.desc())
-    return render_template('lotto/result_list.html', lottos=lotteries)
-
-                
-
-
-@lotto_bp.route('/admin/', methods=['GET', 'POST'])
-def lotto_admin_create():
-
-    if session['wallet'] != config("LOTTO_PUBLIC"):
-        flash("Not Authorised")
-        return redirect('/')
-
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        contract_address = request.form['contract_address']
-        lottery_type = request.form['lottery_type']
-        lottery = Lottery(title, description, contract_address, lottery_type)
-        db.session.add(lottery)
-        db.session.commit()
-        flash("New lottery created")
-
-    return render_template('lotto/new.html')    
-
-
-@lotto_bp.route('/admin/<int:lotto_id>', methods=['GET', 'PUT'])
-def lotto_admin_edit(lotto_id):
-
-    if session['wallet'] != config("LOTTO_PUBLIC"):
-        flash("Not Authorised")
-        return redirect('/')
-
-    lottery = db.session.query(Lottery).filter_by(id=lotto_id).first()
-    if request.method == 'PUT':
-        lottery.title = request.form['title']
-        lottery.description = request.form['description']
-        lottery.contract_address = request.form['contract_address']
-        lottery.lottery_type = request.form['lottery_type']
-        db.session.commit()
-    
-    return render_template('lotto/edit.html', lotto=lottery)      
