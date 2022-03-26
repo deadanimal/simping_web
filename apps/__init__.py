@@ -50,6 +50,14 @@ def about():
 def faq():
     return render_template('faq.html')
 
+@app.route('/explore')
+def explore():
+    return render_template('explore.html')    
+
+@app.route('/mint')
+def mint():
+    return render_template('mint.html')        
+
 @app.route('/profile')
 def profile():
     if session.get("wallet"):
