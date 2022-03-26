@@ -3,8 +3,62 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="col">Home Page</div>
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+    <h1 class="display-4 fw-bold">Simping</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Application that allow social media users to automatically mint NFTs based on their social media profiles on TikTok, Facebook, Instagram, and Twitter. Users can sell and buy their NFTs on the platform.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+        <a href="/profile"><button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Use Simping Now!</button></a>
+        <a href="/explore"><button type="button" class="btn btn-outline-secondary btn-lg px-4">Explore Simping NFT</button></a>
+      </div>
+    </div>
+    <div class="overflow-hidden" style="max-height: 30vh;">
+      <div class="container px-5">
+        <img src="https://getbootstrap.com/docs/5.1/examples/heroes/bootstrap-docs.png" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" width="700" height="500" loading="lazy">
+      </div>
+    </div>
+</div>
+
+<div class="container px-4 py-5" id="hanging-icons">
+    <h2 class="pb-2 border-bottom">Features</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+      <div class="col d-flex align-items-start">
+        <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+          <svg class="bi" width="1em" height="1em"><use xlink:href="#toggles2"></use></svg>
+        </div>
+        <div>
+          <h2>Mint Your Own NFTs</h2>
+          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+          <a href="/profile" class="btn btn-primary">
+            Mint NFT
+          </a>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+          <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
+        </div>
+        <div>
+          <h2>Buy NFTs</h2>
+          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+          <a href="/explore" class="btn btn-primary">
+            Primary button
+          </a>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+          <svg class="bi" width="1em" height="1em"><use xlink:href="#tools"></use></svg>
+        </div>
+        <div>
+          <h2>Featured title</h2>
+          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+          <a href="#" class="btn btn-primary">
+            Primary button
+          </a>
+        </div>
+      </div>
+    </div>
 </div>
 
 {% endblock %}
