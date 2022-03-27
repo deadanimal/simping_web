@@ -22,9 +22,10 @@ class Item(Base):
 
     __tablename__ = 'item'
 
+    contract_address = db.Column(db.String(256), nullable=False)
     token_id = db.Column(db.BigInteger, nullable=False)
 
-    def __init__(self, token_id):
-
+    def __init__(self,contract_address, token_id):
+        self.contract_address = contract_address
         self.token_id = token_id
 
