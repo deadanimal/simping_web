@@ -58,6 +58,14 @@ def explore():
 def mint():
     return render_template('mint.html')        
 
+@app.route('/play')
+def play():    
+    endpoint = ".../api/ip"
+    headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGE4MzViRTI0Y2QxNEUwZTREMjVENTY0NGRBMDM0RjczQTExNzkyZTgiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0ODM5MjY0ODIyNywibmFtZSI6InNpbXBpbmcifQ.s9oheLM37vF4kHTs-lOzTCYCUODTERg2amyV8rCPtOk"}
+
+    print(requests.post(endpoint, data=data, headers=headers).json())    
+    return render_template('mint.html')     
+
 @app.route('/profile')
 def profile():
     if session.get("wallet"):
@@ -69,6 +77,18 @@ def profile():
     else:
         flash("Your login cannot be verified")
         return redirect('/')
+
+@app.route('/settings')
+def settings():
+    if session.get("wallet"):
+        wallet = session['wallet']
+        context = {
+            wallet: wallet
+        }
+        return render_template('settings.html', context=context)    
+    else:
+        flash("Your login cannot be verified")
+        return redirect('/')        
 
 @app.route('/login-via-web3', methods=['GET', 'POST'])
 def login_via_web3():

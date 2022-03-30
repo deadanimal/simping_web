@@ -29,4 +29,3 @@ def collection_detail(collection_id):
     else:
         return render_template('404.html')   
 
-
