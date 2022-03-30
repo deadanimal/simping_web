@@ -24,9 +24,10 @@ def item_list():
 @item_bp.route('/<int:item_id>', methods=['GET'])
 def item_detail(item_id):
     item = db.session.query(Item).filter_by(id=item_id).first()
-    if item:
-        return render_template('item/detail.html', item=item)    
-    else:
-        return render_template('404.html')   
+    return render_template('item/detail.html', item=item)    
+    # if item:
+    #     return render_template('item/detail.html', item=item)    
+    # else:
+    #     return render_template('404.html')   
 
 

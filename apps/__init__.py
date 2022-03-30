@@ -60,10 +60,10 @@ def mint():
 
 @app.route('/play')
 def play():    
-    endpoint = ".../api/ip"
-    headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGE4MzViRTI0Y2QxNEUwZTREMjVENTY0NGRBMDM0RjczQTExNzkyZTgiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0ODM5MjY0ODIyNywibmFtZSI6InNpbXBpbmcifQ.s9oheLM37vF4kHTs-lOzTCYCUODTERg2amyV8rCPtOk"}
+    # endpoint = ".../api/ip"
+    # headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGE4MzViRTI0Y2QxNEUwZTREMjVENTY0NGRBMDM0RjczQTExNzkyZTgiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0ODM5MjY0ODIyNywibmFtZSI6InNpbXBpbmcifQ.s9oheLM37vF4kHTs-lOzTCYCUODTERg2amyV8rCPtOk"}
 
-    print(requests.post(endpoint, data=data, headers=headers).json())    
+    # print(requests.post(endpoint, data=data, headers=headers).json())    
     return render_template('mint.html')     
 
 @app.route('/profile')
@@ -75,8 +75,8 @@ def profile():
         }
         return render_template('profile.html', context=context)    
     else:
-        flash("Your login cannot be verified")
-        return redirect('/')
+        return redirect("www.google.com")
+
 
 @app.route('/settings')
 def settings():
