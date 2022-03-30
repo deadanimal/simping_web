@@ -75,7 +75,7 @@ def profile():
         }
         return render_template('profile.html', context=context)    
     else:
-        return redirect("www.google.com")
+        return redirect("https://chainbifrost.com/connect?dapp=simping.org")
 
 
 @app.route('/settings')
@@ -87,8 +87,7 @@ def settings():
         }
         return render_template('settings.html', context=context)    
     else:
-        flash("Your login cannot be verified")
-        return redirect('/')        
+        return redirect("https://chainbifrost.com/connect?dapp=simping.org")     
 
 @app.route('/login-via-web3', methods=['GET', 'POST'])
 def login_via_web3():
