@@ -56,6 +56,28 @@
       }      
     </style>
 
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '699942751032824',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v13.0'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>     
+
     
   </head>
 
@@ -165,6 +187,13 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <!-- var latestBlock = await provider.getBlockNumber()     -->
+    <!-- var latestBlockTimestamp = provider.getBlock(latestBlock).timestamp -->
+
+    <!-- var now = new Date();
+    var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var timestamp = startOfDay / 1000;     -->
     {% block scripts %}
     {% endblock %}     
           
