@@ -16,11 +16,13 @@
    
 
 <script>
+
 function checkLoginState() {
   FB.getLoginStatus((response) =>  {
     console.log(response)
   });
 }
+window.checkLoginState = checkLoginState;
 </script>
 
 
