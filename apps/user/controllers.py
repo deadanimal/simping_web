@@ -16,8 +16,8 @@ user_bp = Blueprint('user', __name__, url_prefix='/user')
 
 @user_bp.route('/', methods=['GET'])
 def user_list():
-    user = db.session.query(User).order_by(User.date_created.desc())
-    return render_template('user/list.html', users=luser)
+    user_list = db.session.query(User).order_by(User.date_created.desc())
+    return render_template('user/list.html', users=user_list)
 
 
 
