@@ -1,5 +1,17 @@
 # Simping Web
 
+## List of Views
+
+1. Homepage
+   1. A
+   2. A
+2. Explore
+   1. A
+3. Dashboard
+4. Profile
+5. NFT Detail
+6. Factory
+
 ## Deployed Contracts
 
 1. SimpingToken deployed to: 0xb378605a1A2a30229C91cbb263523E2bD7D28e84
