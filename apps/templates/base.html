@@ -54,29 +54,7 @@
       main > .container {
         padding: 60px 15px 0;
       }      
-    </style>
-
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '699942751032824',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v13.0'
-    });
-      
-    FB.AppEvents.logPageView();   
-      
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>     
+    </style>   
 
     
   </head>
@@ -122,9 +100,9 @@
                 <a class="nav-link active" href="/smart-contract">Smart Contract</a>
               </li>     -->
               
-            {% if session['wallet'] %}
+            {% if current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
+                <a class="nav-link" href="/dashboard">Dashboard</a>
               </li>   
 
               <!-- <li class="nav-item">
@@ -145,7 +123,7 @@
               </li>                                   
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="https://chainbifrost.com/connect?dapp=simping.org">Login</a>
+                <a class="nav-link" href="/login">Login</a>
               </li>                          
             {% endif %}  
                         

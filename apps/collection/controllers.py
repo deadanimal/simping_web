@@ -11,21 +11,30 @@ from decouple import config
 from apps.collection.models import Collection
 from apps import db
 
-collection_bp = Blueprint('collection', __name__, url_prefix='/collection')
+collection_bp = Blueprint('collection', __name__, url_prefix='/collections')
 
 
 @collection_bp.route('/', methods=['GET'])
 def collection_list():
-    collection = db.session.query(Collection).order_by(Collection.date_created.desc())
-    return render_template('collection/list.html', collections=collection)
+    collections = db.session.query(Collection).order_by(Collection.date_created.desc())
+    return render_template('collection/list.html', collections=collections)
 
 
 
-@collection_bp.route('/<int:collection_id>', methods=['GET'])
-def collection_detail(collection_id):
-    collection = db.session.query(Collection).filter_by(id=collection_id).first()
+@collection_bp.route('/<collection_address>', methods=['GET'])
+def collection_detail(collection_address):
+    collection = db.session.query(Collection).filter_by(contract_address=collection_address).first()
     if collection:
         return render_template('collection/detail.html', collection=collection)    
     else:
         return render_template('404.html')   
+
+
+@collection_bp.route('/<collection_address>/<int:token_id>', methods=['GET'])
+def token_detail(collection_address, token_id):
+    collection = db.session.query(Collection).filter_by(contract_address=collection_address).first()
+    if collection:
+        return render_template('collection/token_detail.html', collection=collection, token_id=token_id)    
+    else:
+        return render_template('404.html')           
 

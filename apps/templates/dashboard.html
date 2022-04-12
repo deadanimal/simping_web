@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>Dashboard</h1>
+
+<h3>Feature</h3>
+<ol>
+    <li>Collection created</li>
+    <li>Token minted per collection</li>
+    <li>Token sold</li>
+    <li>Token bought</li>
+    <li>Wallet balance</li>
+
+    <li>All transactions</li>
+</ol>
+
+
+<fb:login-button 
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button>
+   
+
+<script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '699942751032824',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v13.0'
+      });
+        
+      FB.AppEvents.logPageView();   
+        
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+</script>  
+
+<script>
+
+    
+
+function checkLoginState() {
+  FB.getLoginStatus((response) =>  {
+    console.log(response)
+  });
+}
+window.checkLoginState = checkLoginState;
+</script>
+
+
+{% endblock %}
